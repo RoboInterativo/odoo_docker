@@ -13,7 +13,7 @@ DB_ARGS=()
 function check_config() {
     param="$1"
     value="$2"
-    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then       
+    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then
         value=$(grep -E "^\s*\b${param}\b\s*=" "$ODOO_RC" |cut -d " " -f3|sed 's/["\n\r]//g')
     fi;
     DB_ARGS+=("--${param}")
@@ -25,13 +25,26 @@ check_config "db_user" "$USER"
 check_config "db_password" "$PASSWORD"
 
 case "$1" in
+    init)
+       shift
+       if [[ "$1" == "translation" ]] ; then
+            echo init  Translation "${DB_ARGS[@]}"
+            wait-for-psql.py ${DB_ARGS[@]} --timeout=30
+            exec odoo "$@" "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
+       elif [[ "$1" == "module" ]] ; then
+            echo init  module $2
+            exec odoo "$@" "${DB_ARGS[@]}" -d db --init={$2} --stop-after-init
+
+     fi
+     ;;
+
     -- | odoo)
         shift
         if [[ "$1" == "scaffold" ]] ; then
             exec odoo "$@"
         else
             wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-            #exec odoo "$@" "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init 
+            #exec odoo "$@" "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
 
             exec odoo "$@" "${DB_ARGS[@]}"
         fi
