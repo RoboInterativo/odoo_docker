@@ -25,18 +25,21 @@ check_config "db_user" "$USER"
 check_config "db_password" "$PASSWORD"
 
 case "$1" in
-    init)
-       shift
-       if [[ "$1" == "translation" ]] ; then
-            echo init  Translation "${DB_ARGS[@]}"
-            wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-            exec odoo "$@" "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
-       elif [[ "$1" == "module" ]] ; then
-            echo init  module $2
-            exec odoo "$@" "${DB_ARGS[@]}" -d db --init={$2} --stop-after-init
+  init)
+     shift
+     if [[ "$1" == "translation" ]] ; then
+          echo init  Translation "${DB_ARGS[@]}"
+          echo  "$@" "COMMAND"
+          wait-for-psql.py ${DB_ARGS[@]} --timeout=30
+          exec odoo "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
+     elif [[ "$1" == "module" ]] ; then
+          echo init  module $2
+          exec odoo "$@" "${DB_ARGS[@]}" -d db --init={$2} --stop-after-init
+     else
+        echo els
+   fi
+   ;;
 
-     fi
-     ;;
 
     -- | odoo)
         shift
