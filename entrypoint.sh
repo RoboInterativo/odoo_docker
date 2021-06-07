@@ -29,12 +29,14 @@ case "$1" in
        shift
        if [[ "$1" == "translation" ]] ; then
             echo init  Translation "${DB_ARGS[@]}"
+            echo  "$@" "COMMAND" 
             wait-for-psql.py ${DB_ARGS[@]} --timeout=30
-            exec odoo "$@" "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
+            exec odoo "${DB_ARGS[@]}" -d db --load-language=ru_RU --stop-after-init
        elif [[ "$1" == "module" ]] ; then
             echo init  module $2
-            exec odoo "$@" "${DB_ARGS[@]}" -d db --init={$2} --stop-after-init
-
+            exec odoo  "${DB_ARGS[@]}" -d db --init={$2} --stop-after-init
+       else
+          echo els
      fi
      ;;
 
@@ -54,6 +56,7 @@ case "$1" in
         exec odoo "$@" "${DB_ARGS[@]}"
         ;;
     *)
+       echo ***
         exec "$@"
 esac
 
