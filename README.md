@@ -41,3 +41,10 @@ docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addo
 docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
 -p 8069 -p 8072 --name odoo -h odoo  -itd myodoo
 ```
+
+Если nginx Внешний
+
+```bash
+docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons \
+-p 127.0.0.1:8069:8069 -p 127.0.0.1:8072:8072 --name odoo -h odoo  -itd myodoo
+```
