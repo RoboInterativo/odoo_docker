@@ -19,10 +19,14 @@ docker build -t myodoo .
 docker run -d -e POSTGRES_USER=odoo -e POSTGRES_PASSWORD=odoo  -e POSTGRES_DB=postgres --net=my-network  -h db --name db   postgres:1
 ```
 
-docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
--p 8069 -p 8072 --name odoo -h odoo  -it myodoo  init translation
 
 # Инициализация модулей ODOO
+
+```bash
+docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
+-p 8069 -p 8072 --name odoo -h odoo  -it myodoo  init translation
+```
+
 
 ```bash
 export modules=`ls extra-addons `
