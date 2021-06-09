@@ -56,13 +56,25 @@ RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ buster-pgdg main' > /etc/
 RUN npm install -g rtlcss
 
 # Install Odoo
+#ENV ODOO_VERSION 13.0
+#ARG ODOO_RELEASE=20210525
+#ARG ODOO_SHA=206c082550b13c745f446e412562d997da6fefc6
+#RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+#        && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
+#        && apt-get update \
+#        && apt-get -y install --no-install-recommends ./odoo.deb \
+#        && rm -rf /var/lib/apt/lists/* odoo.deb
+
+        # Install Odoo
 ENV ODOO_VERSION 13.0
-ARG ODOO_RELEASE=20210525
-ARG ODOO_SHA=206c082550b13c745f446e412562d997da6fefc6
-RUN curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
+ARG ODOO_RELEASE=20200725
+ARG ODOO_SHA=dc135cfa90e3c125032be7c7acdba6d84b0db2ed
+RUN set -x; \
+        curl -o odoo.deb -sSL http://nightly.odoo.com/${ODOO_VERSION}/nightly/deb/odoo_${ODOO_VERSION}.${ODOO_RELEASE}_all.deb \
         && echo "${ODOO_SHA} odoo.deb" | sha1sum -c - \
+        && dpkg --force-depends -i odoo.deb \
         && apt-get update \
-        && apt-get -y install --no-install-recommends ./odoo.deb \
+        && apt-get -y install -f --no-install-recommends \
         && rm -rf /var/lib/apt/lists/* odoo.deb
 
 # Copy entrypoint script and Odoo configuration file
@@ -72,8 +84,10 @@ COPY ./entrypoint.sh /
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN chown odoo /etc/odoo/odoo.conf \
     && mkdir -p /mnt/extra-addons \
+    && mkir -p /opt/project/odoo \
+    && chown -R odoo /opt/project \
     && chown -R odoo /mnt/extra-addons
-VOLUME ["/var/lib/odoo", "/mnt/extra-addons"]
+VOLUME ["/var/lib/odoo", "/mnt/extra-addons","/usr/lib/python3/dist-packages/odoo"]
 
 # Expose Odoo services
 EXPOSE 8069 8071 8072
