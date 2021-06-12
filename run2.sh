@@ -1,5 +1,6 @@
-export modules=`ls extra-addons `
-export modules_comma=`echo  $modules |sed 's/ /,/g'`
+#export modules=`ls extra-addons `
+#export modules_comma=`echo  $modules |sed 's/ /,/g'`
+export modules_comma=icash_fixed,icash_odoo_styles,icash_pos,icash_menu_hide
 #docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
 #-p 8069 -p 8072 --name odoo -h odoo  -it myodoo  init translation
 
@@ -8,12 +9,10 @@ export modules_comma=`echo  $modules |sed 's/ /,/g'`
 #init module  $modules_comma
 #iCashBox,iCashStyles,icash_menu_hide,Point of Sale ICash,Extra access groups for menus 
 
-docker run  -v `pwd`/config:/etc/odoo --rm  --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
+docker run  -v `pwd`/config:/etc/odoo  --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
 -v  `pwd`/odoo:/opt/project/odoo \
--v odoo-web:/var/lib/odoo  \
--p 8069 -p 8072 -p 8071:8071 --name odoo -h odoo  -itd myodoo 
-
-#init update-module pos-sale,pos_restaurant
+-v odoo-web:/var/lib/odoo \
+-p 8069 -p 8072 -p 8071:8071 --name odoo -h odoo  -it myodoo  init update-module $modules_comma
 #init translation
 #  init module icash_fixedinit translation
 #init module icash_fixed
