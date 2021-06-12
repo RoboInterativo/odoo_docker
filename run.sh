@@ -1,7 +1,7 @@
 #export modules=`ls extra-addons |grep icash `
 #export modules_comma=`echo  $modules |sed 's/ /,/g'`
 
-export modules_comma=icash_fixed,icash_odoo_styles,icash_pos,icash_menu_hide
+export modules_comma=icash_fixed,icash_odoo_styles,icash_pos,icash_menu_hide,base_accounting_kit
 #docker run  -v `pwd`/config:/etc/odoo --rm --net=my-network  -v `pwd`/extra-addons/:/mnt/extra-addons  \
 #-p 8069 -p 8072 --name odoo -h odoo  -it myodoo  init translation
 
